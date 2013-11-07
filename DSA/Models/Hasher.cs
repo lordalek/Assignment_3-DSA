@@ -21,12 +21,17 @@ namespace DSA.Models
                 throw new NullReferenceException("rawText is null or empty");
             var binaries = ConvertStringToBinaryString(rawText);
             binaries = AppendPadding(binaries);
-            binaries = PerformRoundFunction(binaries);
             var sb = new StringBuilder();
-            for (int i = 0; i < binaries.Length; i += 8)
+            for (var j = 0; j < binaries.Length; j += 512)
             {
-                string eightBits = binaries.Substring(i, 8);
-                sb.AppendFormat("{0:X2}", Convert.ToByte(eightBits, 2));
+                var tempBinaries = binaries.Substring(j, 512);
+                tempBinaries = PerformRoundFunction(tempBinaries);
+
+                for (var i = 0; i < tempBinaries.Length; i += 8)
+                {
+                    string eightBits = tempBinaries.Substring(i, 8);
+                    sb.AppendFormat("{0:X2}", Convert.ToByte(eightBits, 2));
+                }
             }
             return sb.ToString();
         }
@@ -47,7 +52,7 @@ namespace DSA.Models
             for (int i = 0; i <= 80; i++)
             {
                 part8 = part7;
-                part7 = part6;
+                part7 = XORTwoBinaryStrings(part6, part1);
                 part6 = part5;
                 part5 = part4;
                 part4 = ShiftOneStep(part3);
