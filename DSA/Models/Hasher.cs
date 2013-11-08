@@ -11,11 +11,11 @@ using DSA.Interfaces;
 
 namespace DSA.Models
 {
-    public class Hasher : IHash, IInternalHash
+    public class Hasher
     {
         #region IHash Members
 
-        public string GetHash(string rawText)
+        public static string GetHash(string rawText)
         {
             if (string.IsNullOrEmpty(rawText))
                 throw new NullReferenceException("rawText is null or empty");
@@ -36,7 +36,7 @@ namespace DSA.Models
             return sb.ToString();
         }
 
-        public string PerformRoundFunction(string binaries)
+        public static string PerformRoundFunction(string binaries)
         {
             // 7^5 four times
             const string hashFlipper = "0010000011010011110000011010011100100000110100111100000110100111";
@@ -64,7 +64,7 @@ namespace DSA.Models
             return part1 + part2 + part3 + part4 + part5 + part6 + part7 + part8;
         }
 
-        public string ShiftOneStep(string part)
+        public static string ShiftOneStep(string part)
         {
             var templeft = part[0];
             var sb = new StringBuilder(part.Length);
@@ -80,7 +80,7 @@ namespace DSA.Models
 
         #region IInternalHash Members
 
-        public BitArray AppendPadding(BitArray unPaddedBitArray)
+        public static BitArray AppendPadding(BitArray unPaddedBitArray)
         {
             var paddedArray = new BitArray(unPaddedBitArray.Length + 1);
             paddedArray[0] = true;
@@ -109,7 +109,7 @@ namespace DSA.Models
         }
         #endregion
 
-        public string XORTwoBinaryStrings(string leftSide, string rightSide)
+        public static string XORTwoBinaryStrings(string leftSide, string rightSide)
         {
             if (leftSide == null) throw new ArgumentNullException("leftSide");
             if (rightSide == null) throw new ArgumentNullException("rightSide");
@@ -131,7 +131,7 @@ namespace DSA.Models
                                     ).ToString();
         }
 
-        public string ConvertStringToBinaryString(string inputString)
+        public static string ConvertStringToBinaryString(string inputString)
         {
             if (string.IsNullOrEmpty(inputString))
                 throw new NullReferenceException("inputString is null or empty");
@@ -148,7 +148,7 @@ namespace DSA.Models
 
         #region IInternalHash Members
 
-        public string AppendPadding(string unPaddedBinaries)
+        public static string AppendPadding(string unPaddedBinaries)
         {
             unPaddedBinaries = unPaddedBinaries.Insert(0, "1");
             while (unPaddedBinaries.Length % 512 != 0)

@@ -43,6 +43,8 @@
     <Compile Include="DSA.cs" />
     <Compile Include="Interfaces\IHash.cs" />
     <Compile Include="Models\Hasher.cs" />
+    <Compile Include="Models\PseudoRandomPrimeNumber.cs" />
+    <Compile Include="Models\Signature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
