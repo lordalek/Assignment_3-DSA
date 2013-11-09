@@ -15,7 +15,7 @@ namespace DSA.Models
     {
         #region IHash Members
 
-        public static string GetHash(string rawText)
+        public static BigInteger GetHash(string rawText)
         {
             if (string.IsNullOrEmpty(rawText))
                 throw new NullReferenceException("rawText is null or empty");
@@ -26,14 +26,14 @@ namespace DSA.Models
             {
                 var tempBinaries = binaries.Substring(j, 512);
                 tempBinaries = PerformRoundFunction(tempBinaries);
-
-                for (var i = 0; i < tempBinaries.Length; i += 8)
-                {
-                    string eightBits = tempBinaries.Substring(i, 8);
-                    sb.AppendFormat("{0:X2}", Convert.ToByte(eightBits, 2));
-                }
+                sb.Append(tempBinaries);
+                //for (var i = 0; i < tempBinaries.Length; i += 8)
+                //{
+                //    string eightBits = tempBinaries.Substring(i, 8);
+                //    sb.AppendFormat("{0:X2}", Convert.ToByte(eightBits, 2));
+                //}
             }
-            return sb.ToString();
+            return new BigInteger(sb.ToString());
         }
 
         public static string PerformRoundFunction(string binaries)

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Numerics;
 using DSA.Models;
 using NUnit.Framework;
+using NUnit.Util;
 
 namespace UnitTestProject1
 {
@@ -18,7 +20,7 @@ namespace UnitTestProject1
         [Test]
         public void getHash()
         {
-           var hash = Hasher.GetHash("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+            var hash = Hasher.GetHash("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
             Assert.IsTrue(!string.IsNullOrEmpty(hash));
         }
 
@@ -42,6 +44,20 @@ namespace UnitTestProject1
         {
             var randomNum = PseudoRandomPrimeNumber.GetRandomPrimeNumber(512);
             Assert.IsTrue(PseudoRandomPrimeNumber.IsPrime(randomNum));
+        }
+
+        [Test]
+        public void CheckIfSignatureIsGenerated()
+        {
+            var g = new BigInteger(4);
+            var p = new BigInteger(58400248469);
+            var q = new BigInteger(29151201623);
+            var privateKey = new BigInteger(14692259843);
+            var messagePrivateKey = new BigInteger(15788060033);
+            var publicKey = DSA.DSA.GetPublicKey(g, privateKey, p);
+            var message = "Hello World!";
+            var signature = new Signature().Sign(g, messagePrivateKey, p, q, message, privateKey);
+            Assert.IsTrue(signature.GetS() > 1);
         }
     }
 }

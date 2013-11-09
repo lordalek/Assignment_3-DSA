@@ -30,14 +30,19 @@ namespace DSA.Models
         private void SetS(BigInteger g, BigInteger k, BigInteger p, BigInteger q, string message,
             BigInteger privateKey)
         {
-            _s = (BigInteger.Pow(g, -1) * (BigInteger.Parse(Hasher.GetHash(message), NumberStyles.AllowHexSpecifier))) % q;
+            var hashAsHex = Hasher.GetHash(message);
+            //parse hex
+            var temp1 = (BigInteger.Parse(hashAsHex, NumberStyles.HexNumber));
+            //add privatekey * _r
+            temp1 += privateKey * _r;
+            _s = (temp1 / g) % q;
         }
 
-        public Signature Sign(BigInteger g, BigInteger k, BigInteger p, BigInteger q, string message,
+        public Signature Sign(BigInteger g, BigInteger messageSecretKey, BigInteger p, BigInteger q, string message,
             BigInteger privateKey)
         {
-            SetR(g, k, p, q);
-            SetS(g, k, p, q, message, privateKey);
+            SetR(g, messageSecretKey, p, q);
+            SetS(g, messageSecretKey, p, q, message, privateKey);
             return this;
         }
     }

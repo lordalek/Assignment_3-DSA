@@ -24,18 +24,24 @@ namespace DSA
 
         private static BigInteger GetG(BigInteger p, BigInteger q)
         {
-            var g = new BigInteger();
             var h = new BigInteger(2);
-            while (BigInteger.ModPow(h, (p - 1) / q, p) > 1)
+            var g = BigInteger.ModPow(h, (p - 1) / q, p);
+            while (g <= 1)
             {
                 h++;
+                g = BigInteger.ModPow(h, (p - 1) / q, p);
             }
-            return g;
+            return BigInteger.ModPow(h, (p - 1) / q, p);
         }
 
-        public static BigInteger GetMessageSecretKey(BigInteger p)
+        public static BigInteger GetPrivateKey(BigInteger q)
         {
-            return PseudoRandomPrimeNumber.GetRandomPrimeNumber(p);
+            return PseudoRandomPrimeNumber.GetRandomPrimeNumber(q);
+        }
+
+        public static BigInteger GetMessageSecretKey(BigInteger q)
+        {
+            return PseudoRandomPrimeNumber.GetRandomPrimeNumber(q);
         }
 
         public static BigInteger GetPublicKey(BigInteger g, BigInteger privateKey, BigInteger p)
