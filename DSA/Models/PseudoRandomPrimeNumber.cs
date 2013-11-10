@@ -14,15 +14,35 @@ namespace DSA.Models
             var prime = new BigInteger((16807 * seed) % 2147483647);
             var prev = prime;
             var byteLength = prime.ToByteArray().Length;
-            while (!IsPrime(prime) &&  byteLength != bitLength / 8)
+            while (!IsPrime(prime) && byteLength != bitLength / 8)
             {
-                //prime = prime += (16807 * (seed + 13)) % 2147483647;
+                if (byteLength > bitLength / 8)
+                    prime = (16807 * (seed + 13)) % 2147483647;
                 var flow = (16807 * prev) % 2147483647;
                 prime += flow;
                 prev = prime;
                 byteLength = prime.ToByteArray().Length;
             }
             return prime;
+        }
+
+        public static BigInteger GetRandomEvenNumber(BigInteger p)
+        {
+            var seed = DateTime.Now.Millisecond + 1;
+            var k = new BigInteger((16807 * seed) % 2147483647);
+            var byteLength = k.ToByteArray().Length;
+            var prev = k;
+            var bitLength = (BigInteger.Pow(2, 1024) / p).ToByteArray().Length;
+            while (!k.IsEven && byteLength != bitLength / 8)
+            {
+                if (byteLength > bitLength / 8)
+                    k = (16807 * (seed + 13)) % 2147483647;
+                var flow = (16807 * prev) % 2147483647;
+                k += flow;
+                prev = k;
+                byteLength = k.ToByteArray().Length;
+            }
+            return k;
         }
 
         public static bool IsPrime(BigInteger maybePrimeNumber)

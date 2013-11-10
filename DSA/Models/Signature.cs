@@ -27,22 +27,24 @@ namespace DSA.Models
             _r = (BigInteger.ModPow(g, k, p) % q);
         }
 
-        private void SetS(BigInteger g, BigInteger k, BigInteger p, BigInteger q, string message,
+        private void SetS(BigInteger k, BigInteger q, string message,
             BigInteger privateKey)
         {
             var hashAsHex = Hasher.GetHash(message);
             //parse hex
             var temp1 = (BigInteger.Parse(hashAsHex, NumberStyles.HexNumber));
             //add privatekey * _r
-            temp1 += privateKey * _r;
-            _s = (temp1 / g) % q;
+
+            temp1 += (privateKey * _r);
+            temp1 = temp1/k;
+            _s = (temp1) % q;
         }
 
         public Signature Sign(BigInteger g, BigInteger messageSecretKey, BigInteger p, BigInteger q, string message,
             BigInteger privateKey)
         {
             SetR(g, messageSecretKey, p, q);
-            SetS(g, messageSecretKey, p, q, message, privateKey);
+            SetS(messageSecretKey, q, message, privateKey);
             return this;
         }
     }

@@ -55,9 +55,38 @@ namespace UnitTestProject1
             var privateKey = new BigInteger(14692259843);
             var messagePrivateKey = new BigInteger(15788060033);
             var publicKey = DSA.DSA.GetPublicKey(g, privateKey, p);
-            var message = "Hello World!";
+            var message = "Hello";
             var signature = new Signature().Sign(g, messagePrivateKey, p, q, message, privateKey);
-            Assert.IsTrue(signature.GetS() > 1);
+            var v = new DSA.DSA().VerifySignature2(signature, q, p, g, publicKey, message);
+            Assert.IsTrue(v);
         }
+
+        [Test]
+        public void VerifyNewmessage()
+        {
+            BigInteger q, g, p, k;
+            DSA.DSA.GetPublicKeyCompontents(out p, out q, out k, out g);
+            var privateKey = DSA.DSA.GetPrivateKey(q);
+            var publicKey = DSA.DSA.GetPublicKey(g, privateKey, p);
+            
+            var message = "abc";
+            var signature = new Signature().Sign(g, k, p, q, message, privateKey);
+            Assert.IsTrue(new DSA.DSA().VerifySignature2(signature, q, p, g, publicKey, message));
+        }
+
+        [Test]
+        public void getEvenNumber()
+        {
+            var even = PseudoRandomPrimeNumber.GetRandomEvenNumber(PseudoRandomPrimeNumber.GetRandomPrimeNumber(160));
+            Assert.IsTrue(even.IsEven);
+        }
+
+        //[Test]
+        //public void getP()
+        //{
+        //    var q = PseudoRandomPrimeNumber.GetRandomPrimeNumber(160);
+        //    var p = DSA.DSA.GetP(q);
+        //    Assert.IsTrue(PseudoRandomPrimeNumber.IsPrime(p));
+        //}
     }
 }
