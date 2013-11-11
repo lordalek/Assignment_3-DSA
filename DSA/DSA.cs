@@ -15,8 +15,8 @@ namespace DSA
         public Signature Signature { get; set; }
         public static void GetPublicKeyCompontents(out BigInteger p, out BigInteger q, out BigInteger k, out BigInteger g)
         {
-            q = PseudoRandomPrimeNumber.GetRandomPrimeNumber(160);
-            GetP(q, PseudoRandomPrimeNumber.GetRandomEvenNumber(q), out k, out p);
+            q = PseudoRandomPrimeNumber.GetRandomPrimeNumber2(160);
+            GetP(q, PseudoRandomPrimeNumber.GetRandomEvenNumber2(q), out k, out p);
             g = (GetG(p, q));
         }
 
@@ -40,7 +40,7 @@ namespace DSA
             newK = k;
             while (!PseudoRandomPrimeNumber.IsPrime(p + 1))
             {
-                k = PseudoRandomPrimeNumber.GetRandomEvenNumber(q);
+                k = PseudoRandomPrimeNumber.GetRandomEvenNumber2(q);
                 newK = k;
                 p = q * k;
             }
@@ -65,10 +65,10 @@ namespace DSA
             return PseudoRandomPrimeNumber.GetRandomPrimeNumber(q);
         }
 
-        public static BigInteger GetMessageSecretKey(BigInteger q)
-        {
-            return PseudoRandomPrimeNumber.GetRandomPrimeNumber(q);
-        }
+        //public static BigInteger GetMessageSecretKey(BigInteger q)
+        //{
+        //    return PseudoRandomPrimeNumber.GetRandomPrimeNumber2(q);
+        //}
 
         public static BigInteger GetPublicKey(BigInteger g, BigInteger privateKey, BigInteger p)
         {
@@ -106,11 +106,11 @@ namespace DSA
         {
             var hashValue = BigInteger.Parse(Hasher.GetHash(message), NumberStyles.AllowHexSpecifier);
             var w = BigInteger.ModPow(signature.GetS(), q - 2, q);
-            var u1 = (hashValue * w) % q;
-            var u2 = (signature.GetR() * w) % q;
-
-            var v = ((BigInteger.ModPow(g, u1, p) *
-                      BigInteger.ModPow(publicKey, u2, p) % p) % q);
+            var u1 = (hashValue * w);// % q;
+            var u2 = (signature.GetR() * w);// % q;
+            var tempU1 = BigInteger.ModPow(g, u1, q);
+            var tempU2 = BigInteger.ModPow(publicKey, u2, q);
+            var v = (((tempU1 * tempU2) % p) % q);
             return signature.GetR() == v;
         }
 

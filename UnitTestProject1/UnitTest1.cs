@@ -42,7 +42,7 @@ namespace UnitTestProject1
         [Test]
         public void GetPrimeNumber()
         {
-            var randomNum = PseudoRandomPrimeNumber.GetRandomPrimeNumber(512);
+            var randomNum = PseudoRandomPrimeNumber.GetRandomPrimeNumber2(512);
             Assert.IsTrue(PseudoRandomPrimeNumber.IsPrime(randomNum));
         }
 
@@ -68,7 +68,7 @@ namespace UnitTestProject1
             DSA.DSA.GetPublicKeyCompontents(out p, out q, out k, out g);
             var privateKey = DSA.DSA.GetPrivateKey(q);
             var publicKey = DSA.DSA.GetPublicKey(g, privateKey, p);
-            
+
             var message = "abc";
             var signature = new Signature().Sign(g, k, p, q, message, privateKey);
             Assert.IsTrue(new DSA.DSA().VerifySignature2(signature, q, p, g, publicKey, message));
@@ -77,7 +77,7 @@ namespace UnitTestProject1
         [Test]
         public void getEvenNumber()
         {
-            var even = PseudoRandomPrimeNumber.GetRandomEvenNumber(PseudoRandomPrimeNumber.GetRandomPrimeNumber(160));
+            var even = PseudoRandomPrimeNumber.GetRandomEvenNumber(PseudoRandomPrimeNumber.GetRandomPrimeNumber2(160));
             Assert.IsTrue(even.IsEven);
         }
 
@@ -88,5 +88,14 @@ namespace UnitTestProject1
         //    var p = DSA.DSA.GetP(q);
         //    Assert.IsTrue(PseudoRandomPrimeNumber.IsPrime(p));
         //}
+
+        [Test]
+        public void getPrime()
+        {
+            var p = PseudoRandomPrimeNumber.GetRandomPrimeNumber2(24);
+            var l = PseudoRandomPrimeNumber.IteratedBitcount(p);
+            
+            Assert.IsTrue(l/ 8 == 3);
+        }
     }
 }

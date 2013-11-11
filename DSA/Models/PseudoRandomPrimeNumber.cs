@@ -26,7 +26,62 @@ namespace DSA.Models
             return prime;
         }
 
+        public static BigInteger GetRandomPrimeNumber2(int bitLength)
+        {
+            var seed = DateTime.Now.Millisecond + 1;
+            var prime = new BigInteger((16807 * seed) % 2147483647);
+            var prev = prime;
+            var byteLength = prime.ToByteArray().Length;
+            var bitCount = IteratedBitcount(prime);
+            while (!IsPrime(prime) && bitCount != bitLength)
+            {
+                if (bitCount > bitLength)
+                    prime = (16807 * (seed + 13)) % 2147483647;
+                var flow = (16807 * prev) % 2147483647;
+                prime += flow;
+                prev = prime;
+                bitCount = IteratedBitcount(prime);
+            }
+            return prime;
+        }
+
+        public static int IteratedBitcount(BigInteger n)
+        {
+            var test = n;
+            var count = 0;
+
+            while (test != 0)
+            {
+                if ((test & 1) == 1)// || (test & 0) == 0)
+                {
+                    count++;
+                }
+                test >>= 1;
+            }
+            return count;
+        }
+
         public static BigInteger GetRandomEvenNumber(BigInteger p)
+        {
+            var seed = DateTime.Now.Millisecond + 1;
+            var k = new BigInteger((16807 * seed) % 2147483647);
+            var byteLength = k.ToByteArray().Length;
+            var prev = k;
+            var bitCount = IteratedBitcount(k);
+            var bitLength = IteratedBitcount(p);
+            while (!k.IsEven && bitCount < bitLength)
+            {
+                if (bitCount > bitLength / 8)
+                    k = (16807 * (seed + 13)) % 2147483647;
+                var flow = (16807 * prev) % 2147483647;
+                k += flow;
+                prev = k;
+                bitCount = IteratedBitcount(k);
+            }
+            return k;
+        }
+
+        public static BigInteger GetRandomEvenNumber2(BigInteger p)
         {
             var seed = DateTime.Now.Millisecond + 1;
             var k = new BigInteger((16807 * seed) % 2147483647);
@@ -62,7 +117,7 @@ namespace DSA.Models
             var seed = DateTime.Now.Millisecond + 1;
             var privateKey = new BigInteger((16807 * seed) % 2147483647);
             var prev = privateKey;
-            while (!PseudoRandomPrimeNumber.IsPrime(privateKey))
+            while (!IsPrime(privateKey))
             {
                 if (privateKey > topLimit)
                 {
